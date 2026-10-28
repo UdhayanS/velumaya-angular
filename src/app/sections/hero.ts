@@ -9,7 +9,7 @@ import { Icon } from '../shared/icon';
   imports: [FormsModule, RouterLink, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="banner">
+    <section class="banner" [style.background-image]="bg">
       <div class="container">
         <div class="caption">
           <div class="line-dec"></div>
@@ -37,7 +37,7 @@ import { Icon } from '../shared/icon';
     </section>
   `,
   styles: `
-    .banner { padding: 0; background: linear-gradient(105deg, rgba(7, 20, 38, 0.88) 15%, rgba(7, 20, 38, 0.45)), url('/images/logistics-professional-overseeing-trucking-fleet.jpg') center / cover no-repeat; color: #fff; }
+    .banner { padding: 0; background-position: center; background-size: cover; background-repeat: no-repeat; color: #fff; }
     .caption { padding: 150px 0 120px; max-width: 700px; }
     .eyebrow { display: block; margin-top: 22px; font-size: 17px; letter-spacing: 3px; text-transform: uppercase; color: #9cc0ff; font-weight: 600; }
     h1 { margin: 14px 0 18px; font-size: 48px; font-weight: 700; letter-spacing: 0.5px; }
@@ -59,6 +59,8 @@ import { Icon } from '../shared/icon';
   `,
 })
 export class Hero {
+  // Relative url so it follows <base href> (the site is served from a sub-path on GitHub Pages).
+  bg = 'linear-gradient(105deg, rgba(7, 20, 38, 0.88) 15%, rgba(7, 20, 38, 0.45)), url(images/logistics-professional-overseeing-trucking-fleet.jpg)';
   hero = HERO;
   types = ENQUIRY_TYPES;
   name = '';

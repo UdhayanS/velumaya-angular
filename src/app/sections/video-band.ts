@@ -9,7 +9,7 @@ import { Icon } from '../shared/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="video">
-      <div class="bg" aria-hidden="true"></div>
+      <div class="bg" aria-hidden="true" [style.background-image]="'url(images/truck-shipping-port.jpg)'"></div>
       <div class="overlay"></div>
       <div class="inner">
         <span>Built for the Kingdom's growth</span>
@@ -20,7 +20,7 @@ import { Icon } from '../shared/icon';
   `,
   styles: `
     .video { position: relative; height: 480px; overflow: hidden; padding: 0; margin-top: 80px; background: var(--navy-deep); }
-    .bg { position: absolute; inset: 0; background: url('/images/truck-shipping-port.jpg') center / cover no-repeat; animation: drift 24s ease-in-out infinite alternate; }
+    .bg { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; animation: drift 24s ease-in-out infinite alternate; }
     @keyframes drift { to { transform: scale(1.12); } }
     @media (prefers-reduced-motion: reduce) { .bg { animation: none; } }
     .overlay { position: absolute; inset: 0; background: rgba(7, 20, 38, 0.7); }
