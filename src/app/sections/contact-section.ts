@@ -2,14 +2,13 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } fro
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { EMAILJS } from '../data/emailjs.config';
 import { CONTACT, ENQUIRY_TYPES, SITE } from '../data/site.data';
 import { Icon } from '../shared/icon';
+import { Mailer } from '../shared/mailer';
 import { Reveal } from '../shared/reveal';
 
-/**
- * Contact block: details + form + map. The old site had no backend either (mailto),
- * so submitting opens the visitor's mail client with the message pre-filled.
- */
+/** Contact block: details + form + map. The form sends through EmailJS (see Mailer). */
 @Component({
   selector: 'app-contact-section',
   imports: [FormsModule, Icon, Reveal],
@@ -35,8 +34,9 @@ import { Reveal } from '../shared/reveal';
         <form class="form" reveal [delay]="0.15" (ngSubmit)="send()" #f="ngForm">
           <div class="row">
             <label>Full Name<input name="name" [(ngModel)]="name" required></label>
-            <label>Phone / Email<input name="contact" [(ngModel)]="contact" required></label>
+            <label>Phone Number<input name="phone" type="tel" autocomplete="tel" [(ngModel)]="phone" placeholder="+966 ..."></label>
           </div>
+          <label>Email Address<input name="email" type="email" autocomplete="email" [(ngModel)]="email" required email></label>
           <label>Service
             <select name="service" [(ngModel)]="service">
               <option value="">Select a service...</option>
@@ -45,8 +45,12 @@ import { Reveal } from '../shared/reveal';
           </label>
           <label>Subject<input name="subject" [(ngModel)]="subject"></label>
           <label>Your Message<textarea name="message" rows="5" [(ngModel)]="message" required></textarea></label>
-          <button type="submit" class="btn btn--block" [disabled]="f.invalid">Send Message <app-icon name="send" /></button>
-          @if (sent()) { <p class="ok" role="status">Opening your email app… if nothing happens, write to {{ site.email }}.</p> }
+          <input class="hp" name="company" [(ngModel)]="trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" class="btn btn--block" [disabled]="f.invalid || status() === 'sending'">
+            {{ status() === 'sending' ? 'Sending…' : 'Send Message' }} <app-icon name="send" />
+          </button>
+          @if (status() === 'sent') { <p class="ok" role="status">Thank you! Your message has been sent.{{ autoReply ? ' We have emailed you a confirmation and' : ' We' }} will reply shortly.</p> }
+          @if (status() === 'error') { <p class="err" role="alert">Sorry, we could not send your message. Please try again or email us at <a [href]="'mailto:' + site.email">{{ site.email }}</a>.</p> }
         </form>
       </div>
 
@@ -66,14 +70,16 @@ import { Reveal } from '../shared/reveal';
     small { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
     .list a:hover { color: var(--blue); }
 
-    .form { background: #fff; padding: 34px; box-shadow: var(--shadow); border-top: 5px solid var(--blue); display: grid; gap: 16px; }
+    .form { position: relative; background: #fff; padding: 34px; box-shadow: var(--shadow); border-top: 5px solid var(--blue); display: grid; gap: 16px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; color: #4a4a4a; }
     input, select, textarea { width: 100%; padding: 11px 14px; font-size: 14px; color: #333; background: var(--bg-alt); border: 1px solid #eee; outline: 0; transition: border-color 0.3s, background 0.3s; }
     input:focus, select:focus, textarea:focus { border-color: var(--blue); background: #fff; }
     textarea { resize: vertical; }
     .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .ok { margin: 0; color: #1c8a4a; font-size: 13px; }
+    .ok { margin: 0; color: #1c8a4a; font-size: 14px; line-height: 1.6; }
+    .err { margin: 0; color: #c0392b; font-size: 14px; line-height: 1.6; a { text-decoration: underline; } }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
     .map { margin-top: 70px; height: 380px; }
     iframe { width: 100%; height: 100%; border: 0; filter: grayscale(0.2); }
     @media (max-width: 560px) { .row { grid-template-columns: 1fr; } .form { padding: 22px; } }
@@ -85,31 +91,51 @@ export class ContactSection implements OnInit {
   c = CONTACT;
   types = ENQUIRY_TYPES;
   name = '';
-  contact = '';
+  phone = '';
+  email = '';
   service = '';
   subject = '';
   message = '';
-  sent = signal(false);
+  trap = '';
+  autoReply = !!EMAILJS.autoReplyTemplateId;
+  status = signal<'idle' | 'sending' | 'sent' | 'error'>('idle');
   mapUrl = inject(DomSanitizer).bypassSecurityTrustResourceUrl(
     `https://www.google.com/maps?q=${encodeURIComponent(SITE.mapQuery)}&output=embed`,
   );
   private route = inject(ActivatedRoute);
+  private mailer = inject(Mailer);
 
   /** Pre-fill from the home page quick-enquiry bar / "Request a quote" links. */
   ngOnInit() {
     const q = this.route.snapshot.queryParamMap;
     this.name = q.get('name') ?? '';
-    this.contact = q.get('contact') ?? '';
+    const contact = q.get('contact') ?? '';
+    if (contact.includes('@')) this.email = contact;
+    else this.phone = contact;
     this.service = q.get('service') ?? '';
     if (this.service) this.subject = `Enquiry: ${this.service}`;
   }
 
-  send() {
-    const lines = [`Name: ${this.name}`, `Contact: ${this.contact}`];
-    if (this.service) lines.push(`Service: ${this.service}`);
-    const body = [...lines, '', this.message].join('\n');
-    const subject = this.subject || 'Website enquiry';
-    window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    this.sent.set(true);
+  async send() {
+    if (this.trap) { // bots fill the hidden field; pretend success
+      this.status.set('sent');
+      return;
+    }
+    this.status.set('sending');
+    try {
+      await this.mailer.send({
+        name: this.name.trim(),
+        phone: this.phone.trim(),
+        email: this.email.trim(),
+        service: this.service,
+        subject: this.subject.trim(),
+        message: this.message.trim(),
+      });
+      this.status.set('sent');
+      this.name = this.phone = this.email = this.service = this.subject = this.message = '';
+    } catch (err) {
+      console.error('Email send failed', err);
+      this.status.set('error');
+    }
   }
 }

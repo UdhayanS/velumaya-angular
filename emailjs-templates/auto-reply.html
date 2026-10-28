@@ -1,0 +1,113 @@
+<!-- EmailJS template: AUTO-REPLY to the visitor (create as a NEW template, then paste its ID into
+     src/app/data/emailjs.config.ts -> autoReplyTemplateId)
+     Settings tab:
+       To Email:   {{email}}
+       From Name:  Velumaya Logistics
+       Reply To:   info@velumaya.com
+       Subject:    We have received your enquiry - Velumaya Logistics
+     Variables used: from_name, service, subject, message -->
+<div style="margin:0;padding:0;background:#eef2f7;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef2f7;">Thank you for contacting Velumaya Logistics. We will get back to you shortly.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef2f7;padding:28px 12px;">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#1f2937;">
+
+        <!-- Hero image -->
+        <tr>
+          <td style="background:#0b2545;">
+            <img src="https://www.velumaya.com/images/logistics-professional-overseeing-trucking-fleet.jpg" width="600" alt="Velumaya Logistics" style="display:block;width:100%;height:auto;border:0;">
+          </td>
+        </tr>
+
+        <!-- Brand -->
+        <tr>
+          <td style="padding:22px 32px 0;border-top:4px solid #4883ff;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td valign="middle"><img src="https://www.velumaya.com/images/logo-trim.png" width="46" alt="" style="display:block;height:auto;border:0;"></td>
+              <td valign="middle" style="padding-left:12px;">
+                <div style="font-size:17px;font-weight:700;color:#0b2545;">Velumaya Logistics LLC</div>
+                <div style="font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#4883ff;margin-top:2px;">Saudi Arabia</div>
+              </td>
+            </tr></table>
+          </td>
+        </tr>
+
+        <!-- Greeting -->
+        <tr>
+          <td style="padding:24px 32px 6px;">
+            <h1 style="margin:0 0 14px;font-size:24px;line-height:1.3;color:#0b2545;font-weight:700;">Hi {{from_name}}, thank you for getting in touch</h1>
+            <p style="margin:0 0 14px;font-size:15px;line-height:1.75;color:#374151;">We have received your enquiry and a member of the Velumaya team will review it and contact you shortly. There is nothing more you need to do right now.</p>
+          </td>
+        </tr>
+
+        <!-- Copy of request -->
+        <tr>
+          <td style="padding:6px 32px 0;">
+            <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7280;margin-bottom:10px;">Your request</div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;">
+              <tr>
+                <td width="100" style="padding:12px 16px;color:#6b7280;font-weight:600;border-bottom:1px solid #e5e7eb;">Service</td>
+                <td style="padding:12px 16px;color:#111827;border-bottom:1px solid #e5e7eb;">{{service}}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;color:#6b7280;font-weight:600;border-bottom:1px solid #e5e7eb;">Subject</td>
+                <td style="padding:12px 16px;color:#111827;border-bottom:1px solid #e5e7eb;">{{subject}}</td>
+              </tr>
+              <tr>
+                <td valign="top" style="padding:12px 16px;color:#6b7280;font-weight:600;">Message</td>
+                <td style="padding:12px 16px;color:#374151;line-height:1.65;white-space:pre-wrap;">{{message}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- What happens next -->
+        <tr>
+          <td style="padding:26px 32px 4px;">
+            <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7280;margin-bottom:12px;">What happens next</div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:14px;line-height:1.6;color:#374151;">
+              <tr>
+                <td width="34" valign="top" style="padding:0 0 12px;"><div style="width:24px;height:24px;border-radius:12px;background:#4883ff;color:#ffffff;font-weight:700;font-size:12px;line-height:24px;text-align:center;">1</div></td>
+                <td style="padding:2px 0 12px;"><strong style="color:#0b2545;">We review your needs</strong><br>Our team looks at your logistics or manpower requirements.</td>
+              </tr>
+              <tr>
+                <td valign="top" style="padding:0 0 12px;"><div style="width:24px;height:24px;border-radius:12px;background:#4883ff;color:#ffffff;font-weight:700;font-size:12px;line-height:24px;text-align:center;">2</div></td>
+                <td style="padding:2px 0 12px;"><strong style="color:#0b2545;">We get in touch</strong><br>Expect a reply by email or phone to discuss the details.</td>
+              </tr>
+              <tr>
+                <td valign="top"><div style="width:24px;height:24px;border-radius:12px;background:#4883ff;color:#ffffff;font-weight:700;font-size:12px;line-height:24px;text-align:center;">3</div></td>
+                <td style="padding:2px 0 0;"><strong style="color:#0b2545;">We propose a plan</strong><br>A practical, compliant solution tailored to your operation.</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- CTA -->
+        <tr>
+          <td align="center" style="padding:28px 32px 8px;">
+            <a href="https://www.velumaya.com/services" target="_blank" style="display:inline-block;background:#4883ff;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:13px 30px;border-radius:6px;">Explore our services</a>
+          </td>
+        </tr>
+
+        <!-- Sign-off -->
+        <tr>
+          <td style="padding:22px 32px 30px;">
+            <hr style="border:none;border-top:1px solid #e5e7eb;margin:0 0 20px;">
+            <p style="margin:0;font-size:14px;line-height:1.7;color:#4b5563;">Best regards,<br><strong style="color:#0b2545;">The Velumaya Logistics Team</strong><br>Logistics &amp; Manpower Solutions in Saudi Arabia</p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f3f4f6;padding:18px 32px;text-align:center;font-size:12px;line-height:1.7;color:#6b7280;border-top:1px solid #e5e7eb;">
+            <a href="https://www.velumaya.com" style="color:#2f66dd;text-decoration:none;">www.velumaya.com</a> &middot;
+            <a href="mailto:info@velumaya.com" style="color:#2f66dd;text-decoration:none;">info@velumaya.com</a> &middot;
+            <a href="https://www.linkedin.com/company/velumaya-logistics/" style="color:#2f66dd;text-decoration:none;">LinkedIn</a><br>
+            You are receiving this because you submitted the contact form on velumaya.com.
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</div>
